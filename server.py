@@ -105,7 +105,7 @@ def create_contents_div(recipe_li, overview):
 		recipe_type = i['recipe_type']
 		recipe_name = i['name']
 		recipe_title = i['title']
-		overview = overview
+		overview = i['overview']
 		image = i['image']
 		div = f'''
 		<div class="col-xs-12 col-md-4 section-container-spacer">
