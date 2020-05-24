@@ -108,7 +108,7 @@ def create_contents_div(recipe_li, overview):
 		overview = i['overview']
 		image = i['image']
 		div = f'''
-		<div class="col-xs-12 col-md-4 section-container-spacer">
+		<div class="grid-item col-xs-12 section-container-spacer">
 			<a href="/{recipe_type}/{recipe_name}">
 				<img class="img-responsive" alt="" src="./static/assets/images/{image}">
 				<h2>{recipe_title}</h2>
