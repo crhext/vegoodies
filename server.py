@@ -13,7 +13,8 @@ from filters import datetimeformat, file_type
 s3 = boto3.client(
 	's3',
 	aws_access_key_id=S3_KEY,
-	aws_secret_access_key=S3_SECRET)
+	aws_secret_access_key=S3_SECRET,
+	region_name=S3_ENVIRON)
 
 
 app = Flask(__name__)
