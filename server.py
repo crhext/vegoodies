@@ -16,7 +16,7 @@ app.config["IMAGE_UPLOADS"] = 'static/assets/images'
 app.config["ALLOWED_IMAGE_EXSTENSIONS"] = ["PNG", "JPG", "JPEG", "GIF"]
 app.config["MAX_IMAGE_FILESIZE"] = 0.5*1024*1024
 
-ENV = 'prod'
+ENV = 'dev'
 
 if ENV == 'dev':
 	app.debug = True
@@ -97,27 +97,29 @@ def get_contents_title(page_name):
 		title = 'Lunches'
 	elif page_name == 'snacks':
 		title = 'Snacks & Sides'
+	else: 
+		title = 'Vegoodies'
 	return title 
 
-def create_contents_div(recipe_li, overview):
-	tile_div = ''
-	for i in recipe_li:
-		recipe_type = i['recipe_type']
-		recipe_name = i['name']
-		recipe_title = i['title']
-		overview = i['overview']
-		image = i['image']
-		div = f'''
-		<div class="col-xs-12 col-md-4 section-container-spacer">
-			<a href="/{recipe_type}/{recipe_name}">
-				<img class="img-responsive" alt="" src="./static/assets/images/{image}">
-				<h2>{recipe_title}</h2>
-			</a>
-			<p>{overview}</p>
-		</div>
-		'''
-		tile_div += div
-	return tile_div	
+# def create_contents_div(recipe_li, overview):
+# 	tile_div = ''
+# 	for i in recipe_li:
+# 		recipe_type = i['recipe_type']
+# 		recipe_name = i['name']
+# 		recipe_title = i['title']
+# 		overview = i['overview']
+# 		image_name = f"assets/images/i['image']"
+# 		div = f'''
+# 		<div class="col-xs-12 col-md-4 section-container-spacer">
+# 			<a href="/{recipe_type}/{recipe_name}">
+# 				<img class="img-responsive" alt="" src=" {{ url_for('static', filename=image_name) }}">
+# 				<h2>{recipe_title}</h2>
+# 			</a>
+# 			<p>{overview}</p>
+# 		</div>
+# 		'''
+# 		tile_div += div
+# 	return tile_div	
 
 def get_contents_recipe_li(page_name):
 	recipe_li = []
@@ -144,8 +146,7 @@ def html_contents_page(page_name):
 	recipe_title = get_contents_title(page_name)
 	recipe_li = get_contents_recipe_li(page_name)
 	overview = get_contents_overview(page_name, len(recipe_li))
-	tile_divs = create_contents_div(recipe_li,overview)
-	return render_template('contentstemplate.html', recipe_title=recipe_title, overview=overview, tile_divs=tile_divs)
+	return render_template('contentstemplate.html', recipe_title=recipe_title, overview=overview, recipe_li=recipe_li)
 
 @app.route('/<string:page_name>/<string:recipe_name>')
 def html_recipe_page(page_name,recipe_name):
@@ -159,7 +160,7 @@ def html_recipe_page(page_name,recipe_name):
 				image_name = ''
 			else:
 				image = recipe_dict['image']
-				image_name = f'/static/assets/images/{image}'
+				image_name = f'assets/images/{image}'  
 			if recipe_dict['author'] == '':
 				recipe_author = 'Anonymous'
 			else:

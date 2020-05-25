@@ -75,7 +75,20 @@
   </div>
 </div>
 
-  {{ tile_divs|safe }}
+  {% for recipe in recipe_li %}
+    <div class="col-xs-12 col-md-4 section-container-spacer">
+      <a href="/{{ recipe['recipe_type'] }}/{{ recipe['name'] }}">
+        <img class="img-responsive" alt="" src=" {{ url_for('static', filename='assets/images/' + recipe['image']) }}">
+        <h2>{{ recipe['title'] }}</h2>
+      </a>
+      <p>{{ recipe['overview'] }}</p>
+    </div>
+    
+  {% endfor %}
+
+<!-- 
+
+  {{ tile_divs|safe }} -->
 
 
 </main>
