@@ -6,17 +6,27 @@ from flask import Flask, render_template, url_for, request, redirect, Markup
 from werkzeug.utils import secure_filename
 import random
 from flask_sqlalchemy import SQLAlchemy
+import boto3
+from config import S3_BUCKET, S3_KEY, S3_SECRET
+from filters import datetimeformat, file_type
+
+s3 = boto3.client(
+	's3',
+	aws_access_key_id=S3_KEY,
+	aws_secret_access_key=S3_SECRET)
 
 
 app = Flask(__name__)
-
+app.jinja_env.filters['datetimeformat'] = datetimeformat
+app.jinja_env.filters['file_type'] = file_type
 MYDIR = os.path.dirname(__file__)
 
 app.config["IMAGE_UPLOADS"] = 'static/assets/images'
 app.config["ALLOWED_IMAGE_EXSTENSIONS"] = ["PNG", "JPG", "JPEG", "GIF"]
 app.config["MAX_IMAGE_FILESIZE"] = 0.5*1024*1024
 
-ENV = 'dev'
+
+ENV = 'prod'
 
 if ENV == 'dev':
 	app.debug = True
@@ -101,25 +111,6 @@ def get_contents_title(page_name):
 		title = 'Vegoodies'
 	return title 
 
-# def create_contents_div(recipe_li, overview):
-# 	tile_div = ''
-# 	for i in recipe_li:
-# 		recipe_type = i['recipe_type']
-# 		recipe_name = i['name']
-# 		recipe_title = i['title']
-# 		overview = i['overview']
-# 		image_name = f"assets/images/i['image']"
-# 		div = f'''
-# 		<div class="col-xs-12 col-md-4 section-container-spacer">
-# 			<a href="/{recipe_type}/{recipe_name}">
-# 				<img class="img-responsive" alt="" src=" {{ url_for('static', filename=image_name) }}">
-# 				<h2>{recipe_title}</h2>
-# 			</a>
-# 			<p>{overview}</p>
-# 		</div>
-# 		'''
-# 		tile_div += div
-# 	return tile_div	
 
 def get_contents_recipe_li(page_name):
 	recipe_li = []
@@ -127,14 +118,6 @@ def get_contents_recipe_li(page_name):
 	for row in database_recipe_li:
 		recipe_dict = row.__dict__
 		recipe_li.append(recipe_dict)
-
-	# print(recipe_li)
-
-	# csv_list = csv.DictReader(open('database.csv'))	
-	# recipe_li = []
-	# for i in csv_list:
-	# 	if i['recipe_type'] == page_name:
-	# 		recipe_li.append(i)
 	return recipe_li
 
 @app.route('/')
@@ -146,6 +129,8 @@ def html_contents_page(page_name):
 	recipe_title = get_contents_title(page_name)
 	recipe_li = get_contents_recipe_li(page_name)
 	overview = get_contents_overview(page_name, len(recipe_li))
+	for i in recipe_li:
+		i['url'] = s3.generate_presigned_url('get_object', Params = {'Bucket': S3_BUCKET, 'Key': i['image']}, ExpiresIn = 100)
 	return render_template('contentstemplate.html', recipe_title=recipe_title, overview=overview, recipe_li=recipe_li)
 
 @app.route('/<string:page_name>/<string:recipe_name>')
@@ -157,15 +142,15 @@ def html_recipe_page(page_name,recipe_name):
 		for row in recipe.all():
 			recipe_dict = row.__dict__
 			if 'noimage' in recipe_dict['image']:
-				image_name = ''
+				url = ''
 			else:
 				image = recipe_dict['image']
-				image_name = f'assets/images/{image}'  
+				url = s3.generate_presigned_url('get_object', Params = {'Bucket': S3_BUCKET, 'Key': image}, ExpiresIn = 100)
 			if recipe_dict['author'] == '':
 				recipe_author = 'Anonymous'
 			else:
 				recipe_author = recipe_dict['author']
-		return render_template('recipetemplate.html', recipe=recipe_dict, image_name=image_name, recipe_author=recipe_author)
+		return render_template('recipetemplate.html', recipe=recipe_dict, recipe_author=recipe_author, url=url)
 
 
 @app.route('/add')
@@ -175,6 +160,14 @@ def html_add_recipe():
 @app.route('/somethingwentwrong')
 def something_went_wrong():
 	return render_template('somethingwentwrong.html')
+
+@app.route('/files')
+def files():
+	s3_resource = boto3.resource('s3')
+	my_bucket = s3_resource.Bucket(S3_BUCKET)
+	summaries = my_bucket.objects.all()
+
+	return render_template('files.html', my_bucket=my_bucket, files=summaries)
 
 @app.route('/submitted/<string:recipe_directory>')
 def html_submitted_recipe(recipe_directory):
@@ -198,22 +191,14 @@ def submit_form():
 		recipe_portions= data['portions']
 		recipe_author = data['author']
 
-		if request.files:
-			image = request.files["image"]
-			if not image.filename == '':
-				if not allowed_image(image.filename):
-					print("file must be an image")
-					return redirect(request.url)
-				else:
-					filename = secure_filename(image.filename)
-					image.save(os.path.join(MYDIR + "/" + app.config["IMAGE_UPLOADS"], filename))
+		file = request.files['image']
 
-		if image.filename == '':
-			image_name = f'noimage{random.randrange(1,4)}.jpg'
-		else:
-			image_name = image.filename
+		s3_resource = boto3.resource('s3')
+		my_bucket = s3_resource.Bucket(S3_BUCKET)
+		my_bucket.Object(file.filename).put(Body=file)
 
-		print(recipe_method)
+		image_name = file.filename
+
 
 		if recipe_method == '':
 			return render_template('add.html', message="Please enter required fields.")
@@ -298,3 +283,52 @@ def submit_form():
 		# 	writer.writerow({'recipe_type': recipe_type, 'title': data['title'], 'name': recipe_name, 'overview':data['overview'], 'method':data['method'], 'ingredients':data['ingredients'],'tags':data['tags'],'portions':data['portions'],'author':data['author'],'image':image_name })
 
 		# return redirect(f'/submitted/{recipe_type}_{recipe_name}')
+
+
+		# def create_contents_div(recipe_li, overview):
+# 	tile_div = ''
+# 	for i in recipe_li:
+# 		recipe_type = i['recipe_type']
+# 		recipe_name = i['name']
+# 		recipe_title = i['title']
+# 		overview = i['overview']
+# 		image_name = f"assets/images/i['image']"
+# 		div = f'''
+# 		<div class="col-xs-12 col-md-4 section-container-spacer">
+# 			<a href="/{recipe_type}/{recipe_name}">
+# 				<img class="img-responsive" alt="" src=" {{ url_for('static', filename=image_name) }}">
+# 				<h2>{recipe_title}</h2>
+# 			</a>
+# 			<p>{overview}</p>
+# 		</div>
+# 		'''
+# 		tile_div += div
+# 	return tile_div	
+
+	# print(recipe_li)
+
+	# csv_list = csv.DictReader(open('database.csv'))	
+	# recipe_li = []
+	# for i in csv_list:
+	# 	if i['recipe_type'] == page_name:
+	# 		recipe_li.append(i)
+
+
+
+
+		# if request.files:
+		# 	image = request.files["image"]
+		# 	if not image.filename == '':
+		# 		if not allowed_image(image.filename):
+		# 			print("file must be an image")
+		# 			return redirect(request.url)
+		# 		else:
+		# 			filename = secure_filename(image.filename)
+		# 			image.save(os.path.join(MYDIR + "/" + app.config["IMAGE_UPLOADS"], filename))
+
+		# if image.filename == '':
+		# 	image_name = f'noimage{random.randrange(1,4)}.jpg'
+		# else:
+		# 	image_name = image.filename
+
+		# print(recipe_method)

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <title>Files</title>  
+
+<link href="../static/style.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-12-xs">
+			<h3> Vegoodies S3 Bucket Info <h3>
+			<p> Created: {{ my_bucket.creation_date | datetimeformat }} </p>
+
+			<table class=" table table-striped">
+				<tr>
+					<th>Filename</th>
+					<th>Last Modified</th>
+					<th>Type</th>
+				</tr>
+				{% for f in files%}
+				<tr>
+					<td>{{ f.key }}</td>
+					<td>{{ f.last_modified | datetimeformat }}</td>
+					<td>{{ f.key | file_type }}</td>
+				</tr>
+				{% endfor %}
+
+
+
+			</table>
+
+
+
+</div>
+</div>
+</div>
+</body>

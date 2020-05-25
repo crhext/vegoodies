@@ -75,21 +75,31 @@
   </div>
 </div>
 
+<div class="hero-full-wrapper">
+  <div class="grid">
+  <div class="gutter-sizer"></div>
+    <div class="grid-sizer"></div>
+
   {% for recipe in recipe_li %}
-    <div class="col-xs-12 col-md-4 section-container-spacer">
+    <div class="grid-item">
       <a href="/{{ recipe['recipe_type'] }}/{{ recipe['name'] }}">
-        <img class="img-responsive" alt="" src=" {{ url_for('static', filename='assets/images/' + recipe['image']) }}">
+        
+        <img class="img-responsive" alt="" src=" {{ recipe['url'] }}">
         <h2>{{ recipe['title'] }}</h2>
       </a>
       <p>{{ recipe['overview'] }}</p>
     </div>
-    
   {% endfor %}
 
-<!-- 
+  </div>
+</div>
 
-  {{ tile_divs|safe }} -->
 
+<script>
+  document.addEventListener("DOMContentLoaded", function (event) {
+     masonryBuild();
+  });
+</script>
 
 </main>
 
