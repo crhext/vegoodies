@@ -1,7 +1,7 @@
 # vegoodies
 Flask App to post &amp; manage plant based recipes
 
-Fixes:
+Fixes To Do:
 - Limit file upload size
 
 To Do:
