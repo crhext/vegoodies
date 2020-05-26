@@ -163,7 +163,10 @@ def something_went_wrong():
 
 @app.route('/files')
 def files():
-	s3_resource = boto3.resource('s3')
+	s3_resource = boto3.resource('s3',
+		aws_access_key_id=S3_KEY,
+		aws_secret_access_key=S3_SECRET,
+		region_name='eu-west-2')
 	my_bucket = s3_resource.Bucket(S3_BUCKET)
 	summaries = my_bucket.objects.all()
 
@@ -192,12 +195,14 @@ def submit_form():
 		recipe_author = data['author']
 
 		file = request.files['image']
+		image_name = file.filename
 
-		s3_resource = boto3.resource('s3')
+		s3_resource = boto3.resource('s3',
+			aws_access_key_id=S3_KEY,
+			aws_secret_access_key=S3_SECRET,
+			region_name='eu-west-2')
 		my_bucket = s3_resource.Bucket(S3_BUCKET)
 		my_bucket.Object(file.filename).put(Body=file)
-
-		image_name = file.filename
 
 
 		if recipe_method == '':
