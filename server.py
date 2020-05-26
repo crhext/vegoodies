@@ -12,8 +12,8 @@ from filters import datetimeformat, file_type
 
 s3 = boto3.client(
 	's3',
-	aws_access_key_id=S3_KEY,
-	aws_secret_access_key=S3_SECRET,
+	aws_access_key_id="AKIAQ5TDYBX2M6MM6TY4",
+	aws_secret_access_key="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",
 	region_name='eu-west-2')
 
 
