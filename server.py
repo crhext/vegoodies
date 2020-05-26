@@ -165,7 +165,7 @@ def something_went_wrong():
 def files():
 	s3_resource = boto3.resource('s3')
 	my_bucket = s3_resource.Bucket(S3_BUCKET)
-	summaries = s3.my_bucket.objects.all()
+	summaries = my_bucket.objects.all()
 
 	return render_template('files.html', my_bucket=my_bucket, files=summaries)
 
