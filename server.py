@@ -26,7 +26,6 @@ app.config["IMAGE_UPLOADS"] = 'static/assets/images'
 app.config["ALLOWED_IMAGE_EXSTENSIONS"] = ["PNG", "JPG", "JPEG", "GIF"]
 app.config["MAX_IMAGE_FILESIZE"] = 0.5*1024*1024
 
-
 ENV = 'prod'
 
 if ENV == 'dev':
@@ -34,7 +33,7 @@ if ENV == 'dev':
 	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://chrishext:chris123@localhost/vegoodies'
 else:
 	app.debug = False
-	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://bandmyjijalmrg:bc70e5ce190d68cbf124fb126df635558d86a2aae22088642dd4cffc13e95654@ec2-54-86-170-8.compute-1.amazonaws.com:5432/d181a23h4g080h'
+	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://svhenitdmnzmrh:02d06ab79b88aad28b618849e7e37101d5ce5804c2f4daf3892f8f46aa13fdbb@ec2-34-230-231-71.compute-1.amazonaws.com:5432/d5tckk05rd759p'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
