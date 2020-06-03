@@ -161,6 +161,14 @@ def html_add_recipe():
 def something_went_wrong():
 	return render_template('somethingwentwrong.html')
 
+@app.route('/register')
+def register():
+	return render_template('register.html')
+
+@app.route('/signin')
+def signin():
+	return render_template('signin.html')
+
 @app.route('/files')
 def files():
 	s3_resource = boto3.resource('s3',

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width,initial-scale=1" name="viewport">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-168268365-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-168268365-1');
+  </script>
+
+  <!-- Disable tap highlight on IE -->
+  <meta name="msapplication-tap-highlight" content="no">
+  
+  <link href="./static/assets/apple-icon-180x180.png" rel="apple-touch-icon">
+  <link href="./static/assets/favicon.ico" rel="icon">
+
+
+
+  <title>Vegoodies</title>  
+
+<link href="./static/style.css" rel="stylesheet"></head>
+
+<body>
+
+<header class="">
+  <div class="navbar navbar-default visible-xs">
+    <button type="button" class="navbar-toggle collapsed">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a href="/" class="navbar-brand">Vegoodies</a>
+  </div>
+
+  <nav class="sidebar">
+    <div class="navbar-collapse" id="navbar-collapse">
+      <div class="site-header hidden-xs">
+          <a class="site-brand" href="/" title="">
+            <img class="img-responsive site-logo" alt="" style="transform: rotate(180deg)" src="/static/assets/images/v-logo.svg">
+            Vegoodies
+          </a>
+        <p>Plant based recipes for every occasion; by Chris & Narnz.</p>
+      </div>
+      <ul class="nav">
+        <li><a href="/" title="">Home</a></li>
+        <li><a href="./mains" title="">Mains</a></li>
+        <li><a href="./desserts" title="">Desserts</a></li>
+        <li><a href="./lunches" title="">Lunches</a></li>
+        <li><a href="./snacks" title="">Snacks & Sides</a></li>
+        <li><a href="./breakfasts" title="">Breakfasts</a></li>
+        <li><a href="./add" title="">Add Recipe</a></li>
+      </ul>
+
+      <nav class="nav-footer">
+        <p class="nav-footer-social-buttons">
+          <a class="fa-icon" href="https://www.instagram.com/vegoodies/" title="">
+            <i class="fa fa-instagram"></i>
+          </a> <small> <a href="https://www.instagram.com/vegoodies/" title="Instagram"> © Vegoodies |</a><a href="http://www.mashup-template.com/" title="HTML/CSS Inspiration"> Mashup</a></small></p>
+      </nav>  
+    </div> 
+  </nav>
+</header>
+
+<main class="" id="main-collapse">
+<div class="row">
+  <div class="col-xs-9">
+      <h1>Register</h1>
+       <form action="submit_form" method="post" class="reveal-content form-signin" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+              </div>
+              <div class="form-group">
+                <label for="Username">Username</label>
+                <input type="text" class="form-control" id="Username" name="Username" placeholder="Enter your username" required>
+              </div>              
+
+              <div class="form-group">
+                  <label for="email">Email address</label>
+                  <input type="email" class="form-control" id="email" placeholder="Enter your email address">
+              </div>
+
+              <div class="form-group">
+                  <label for="password">Password</label>                
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+              </div>
+
+              <div class="form-group">
+                  <label for="confirmpassword">Confirm your password</label>                
+                <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" placeholder="Confirm your password" required>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg">Register</button>
+            </div>
+          </div>
+        </form>
+  </div>
+</div>
+</main>
+
+</body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function (event) {
+  navbarToggleSidebar();
+  navActivePage();
+});
+</script>
+
+<script type="text/javascript" src="./static/script.js"></script></body>
+
+</html>
